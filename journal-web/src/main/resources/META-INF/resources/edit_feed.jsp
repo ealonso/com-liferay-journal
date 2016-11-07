@@ -326,6 +326,12 @@ renderResponse.setTitle((feed == null) ? LanguageUtil.get(request, "new-feed") :
 </aui:form>
 
 <aui:script>
+	<portlet:renderURL var="editFeedURL">
+		<portlet:param name="mvcPath" value="/edit_feed.jsp" />
+		<portlet:param name="redirect" value="<%= redirect %>" />
+		<portlet:param name="contentField" value="<%= JournalFeedConstants.WEB_CONTENT_DESCRIPTION %>" />
+	</portlet:renderURL>
+
 	function <portlet:namespace />openStructureSelector() {
 		Liferay.Util.openDDMPortlet(
 			{
@@ -351,24 +357,18 @@ renderResponse.setTitle((feed == null) ? LanguageUtil.get(request, "new-feed") :
 			},
 			function(event) {
 				if (confirm('<%= UnicodeLanguageUtil.get(request, "selecting-a-new-structure-changes-the-available-templates-and-available-feed-item-content") %>') && (document.<portlet:namespace />fm.<portlet:namespace />ddmStructureKey.value != event.structurekey)) {
-					document.<portlet:namespace />fm.<portlet:namespace />ddmStructureKey.value = event.ddmstructurekey;
-					document.<portlet:namespace />fm.<portlet:namespace />ddmTemplateKey.value = '';
-					document.<portlet:namespace />fm.<portlet:namespace />ddmRendererTemplateKey.value = '';
-					document.<portlet:namespace />fm.<portlet:namespace />contentField.value = '<%= JournalFeedConstants.WEB_CONTENT_DESCRIPTION %>';
+					var uri = '<%= editFeedURL %>';
 
-					submitForm(document.<portlet:namespace />fm);
+					uri = Liferay.Util.addParams('<portlet:namespace />ddmStructureKey=' + event.ddmstructurekey, uri);
+
+					location.href = uri;
 				}
 			}
 		);
 	}
 
 	function <portlet:namespace />removeStructure() {
-		document.<portlet:namespace />fm.<portlet:namespace />ddmStructureKey.value = '';
-		document.<portlet:namespace />fm.<portlet:namespace />ddmTemplateKey.value = '';
-		document.<portlet:namespace />fm.<portlet:namespace />ddmRendererTemplateKey.value = '';
-		document.<portlet:namespace />fm.<portlet:namespace />contentField.value = '<%= JournalFeedConstants.WEB_CONTENT_DESCRIPTION %>';
-
-		submitForm(document.<portlet:namespace />fm);
+		location.href = '<%= editFeedURL %>';
 	}
 
 	function <portlet:namespace />saveFeed() {
