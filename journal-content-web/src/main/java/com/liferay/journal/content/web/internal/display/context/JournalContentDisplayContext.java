@@ -881,7 +881,7 @@ public class JournalContentDisplayContext {
 		}
 
 		try {
-			_ddmTemplate = DDMTemplateLocalServiceUtil.fetchTemplate(
+			ddmTemplate = DDMTemplateLocalServiceUtil.fetchTemplate(
 				articleDisplay.getGroupId(),
 				PortalUtil.getClassNameId(DDMStructure.class), ddmTemplateKey,
 				true);
