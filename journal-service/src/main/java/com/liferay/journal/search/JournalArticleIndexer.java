@@ -245,7 +245,10 @@ public class JournalArticleIndexer
 	public void reindexDDMStructures(List<Long> ddmStructureIds)
 		throws SearchException {
 
-		if (_indexStatusManager.isIndexReadOnly() || !isIndexerEnabled()) {
+		if (_indexStatusManager.isIndexReadOnly() ||
+			_indexStatusManager.isIndexReadOnly(getClassName()) ||
+			!isIndexerEnabled()) {
+
 			return;
 		}
 
