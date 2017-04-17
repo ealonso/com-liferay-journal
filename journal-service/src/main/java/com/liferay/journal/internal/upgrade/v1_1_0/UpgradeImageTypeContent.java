@@ -83,9 +83,18 @@ public class UpgradeImageTypeContent extends UpgradeProcess {
 
 				long folderId = getFolderId(userId, groupId, resourcePrimKey);
 
-				FileEntry fileEntry = getFileEntry(groupId, folderId, id, true);
+				FileEntry fileEntry = null;
 
-				if (fileEntry == null) {
+				try {
+					fileEntry = PortletFileRepositoryUtil.getPortletFileEntry(
+						groupId, folderId, id);
+				}
+				catch (PortalException pe) {
+					_log.error(
+						"Unable to get file entry with group ID " + groupId +
+							", folder ID " + folderId + ", and file name " + id,
+						pe);
+
 					continue;
 				}
 
@@ -141,11 +150,19 @@ public class UpgradeImageTypeContent extends UpgradeProcess {
 					long folderId = getFolderId(
 						userId, groupId, resourcePrimKey);
 
-					FileEntry fileEntry = getFileEntry(
-						groupId, folderId, String.valueOf(articleImageId),
-						false);
+					try {
+						PortletFileRepositoryUtil.getPortletFileEntry(
+							groupId, folderId, String.valueOf(articleImageId));
+					}
+					catch (PortalException pe) {
+						if (_log.isDebugEnabled()) {
+							_log.debug(
+								"Unable to get file entry with group ID " +
+									groupId + ", folder ID " + folderId +
+										", and file name " + articleImageId,
+								pe);
+						}
 
-					if (fileEntry != null) {
 						continue;
 					}
 
@@ -170,28 +187,6 @@ public class UpgradeImageTypeContent extends UpgradeProcess {
 		copyJournalArticleImagesToJournalRepository();
 
 		updateContentImages();
-	}
-
-	protected FileEntry getFileEntry(
-		long groupId, long folderId, String fileName, boolean showLog) {
-
-		FileEntry fileEntry = null;
-
-		try {
-			fileEntry = PortletFileRepositoryUtil.getPortletFileEntry(
-				groupId, folderId, fileName);
-		}
-		catch (PortalException pe) {
-			if (showLog) {
-				_log.error(
-					"Unable to get file entry with group ID " + groupId +
-						", folder ID " + folderId + ", and file name " +
-							fileName,
-					pe);
-			}
-		}
-
-		return fileEntry;
 	}
 
 	protected long getFolderId(long userId, long groupId, long resourcePrimKey)
