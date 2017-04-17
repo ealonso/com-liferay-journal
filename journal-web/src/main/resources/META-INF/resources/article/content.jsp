@@ -96,11 +96,17 @@ if (!searchRestriction) {
 <liferay-ui:error exception="<%= StorageFieldRequiredException.class %>" message="please-fill-out-all-required-fields" />
 
 <aui:fieldset>
-	<aui:input autoFocus="<%= true %>" ignoreRequestValue="<%= changeStructure %>" label="title" localized="<%= true %>" name="titleMapAsXML" type="text" wrapperCssClass="article-content-title">
-		<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
-			<aui:validator name="required" />
-		</c:if>
-	</aui:input>
+	<div class="article-content-title">
+		<liferay-ui:input-localized
+			editorName="alloyeditor"
+			formName="fm"
+			ignoreRequestValue="<%= changeStructure %>"
+			name="titleMapAsXML"
+			placeholder="title"
+			type="editor"
+			xml="<%= article != null ? article.getTitleMapAsXML() : StringPool.BLANK %>"
+		/>
+	</div>
 
 	<c:if test="<%= (article == null) || article.isNew() %>">
 		<c:choose>
@@ -116,7 +122,17 @@ if (!searchRestriction) {
 		</c:choose>
 	</c:if>
 
-	<aui:input ignoreRequestValue="<%= changeStructure %>" label="summary" localized="<%= true %>" name="descriptionMapAsXML" type="text" wrapperCssClass="article-content-description" />
+	<div class="article-content-description">
+		<liferay-ui:input-localized
+			editorName="alloyeditor"
+			formName="fm"
+			ignoreRequestValue="<%= changeStructure %>"
+			name="descriptionMapAsXML"
+			placeholder="description"
+			type="editor"
+			xml="<%= article != null ? article.getDescriptionMapAsXML() : StringPool.BLANK %>"
+		/>
+	</div>
 
 	<div class="article-content-content">
 		<liferay-ddm:html
