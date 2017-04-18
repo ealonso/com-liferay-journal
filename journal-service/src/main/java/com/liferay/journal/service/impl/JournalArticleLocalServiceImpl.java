@@ -364,10 +364,6 @@ public class JournalArticleLocalServiceImpl
 			articleId = String.valueOf(counterLocalService.increment());
 		}
 
-		sanitize(
-			user.getCompanyId(), groupId, userId, classPK, titleMap,
-			descriptionMap);
-
 		validate(
 			user.getCompanyId(), groupId, classNameId, articleId, autoArticleId,
 			version, titleMap, content, ddmStructureKey, ddmTemplateKey,
@@ -5386,10 +5382,6 @@ public class JournalArticleLocalServiceImpl
 			expired = true;
 		}
 
-		sanitize(
-			user.getCompanyId(), groupId, userId, article.getClassPK(),
-			titleMap, descriptionMap);
-
 		validate(
 			user.getCompanyId(), groupId, latestArticle.getClassNameId(),
 			titleMap, content, ddmStructureKey, ddmTemplateKey, displayDate,
@@ -7480,26 +7472,6 @@ public class JournalArticleLocalServiceImpl
 		throws PortalException {
 
 		notifySubscribers(userId, article, action, serviceContext);
-	}
-
-	protected void sanitize(
-			long companyId, long groupId, long userId, long classPK,
-			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap)
-		throws PortalException {
-
-		for (Locale locale : titleMap.keySet()) {
-			String title = HtmlUtil.stripHtml(titleMap.get(locale));
-
-			titleMap.put(locale, title);
-		}
-
-		for (Locale locale : descriptionMap.keySet()) {
-			String description = SanitizerUtil.sanitize(
-				companyId, groupId, userId, JournalArticle.class.getName(),
-				classPK, ContentTypes.TEXT_HTML, descriptionMap.get(locale));
-
-			descriptionMap.put(locale, description);
-		}
 	}
 
 	protected void saveImages(
