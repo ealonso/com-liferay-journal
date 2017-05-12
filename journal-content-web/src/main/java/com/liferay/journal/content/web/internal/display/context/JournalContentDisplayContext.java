@@ -84,6 +84,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
+import javax.portlet.filter.PortletRequestWrapper;
 
 /**
  * @author Eudaldo Alonso
@@ -597,8 +598,15 @@ public class JournalContentDisplayContext {
 
 			redirectURL.setWindowState(LiferayWindowState.POP_UP);
 
+			PortletRequest portletRequest = _portletRequest;
+
+			while (portletRequest instanceof PortletRequestWrapper) {
+				portletRequest =
+					((PortletRequestWrapper)portletRequest).getRequest();
+			}
+
 			PortletURL portletURL = latestArticleAssetRenderer.getURLEdit(
-				PortalUtil.getLiferayPortletRequest(_portletRequest), null,
+				PortalUtil.getLiferayPortletRequest(portletRequest), null,
 				LiferayWindowState.POP_UP, redirectURL);
 
 			portletURL.setParameter(
