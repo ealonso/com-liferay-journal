@@ -133,10 +133,9 @@ public class JournalContentSearchLocalServiceImpl
 					String classPK = displayInformationProvider.getClassPK(
 						portletPreferences);
 
-					_addContentSearch(
-						layout.getGroupId(), companyId,
-						layout.isPrivateLayout(), layout.getLayoutId(),
-						portletId, classPK);
+					updateContentSearch(
+						layout.getGroupId(), layout.isPrivateLayout(),
+						layout.getLayoutId(), portletId, classPK);
 				}
 			});
 
@@ -293,9 +292,19 @@ public class JournalContentSearchLocalServiceImpl
 		if (contentSearch == null) {
 			Group group = groupLocalService.getGroup(groupId);
 
-			contentSearch = _addContentSearch(
-				groupId, group.getCompanyId(), privateLayout, layoutId,
-				portletId, articleId);
+			long contentSearchId = counterLocalService.increment();
+
+			contentSearch = journalContentSearchPersistence.create(
+				contentSearchId);
+
+			contentSearch.setGroupId(groupId);
+			contentSearch.setCompanyId(group.getCompanyId());
+			contentSearch.setPrivateLayout(privateLayout);
+			contentSearch.setLayoutId(layoutId);
+			contentSearch.setPortletId(portletId);
+			contentSearch.setArticleId(articleId);
+
+			journalContentSearchPersistence.update(contentSearch);
 		}
 
 		return contentSearch;
@@ -320,25 +329,6 @@ public class JournalContentSearchLocalServiceImpl
 		}
 
 		return contentSearches;
-	}
-
-	private JournalContentSearch _addContentSearch(
-		long groupId, long companyId, boolean privateLayout, long layoutId,
-		String portletId, String articleId) {
-
-		long contentSearchId = counterLocalService.increment();
-
-		JournalContentSearch contentSearch =
-			journalContentSearchPersistence.create(contentSearchId);
-
-		contentSearch.setGroupId(groupId);
-		contentSearch.setCompanyId(companyId);
-		contentSearch.setPrivateLayout(privateLayout);
-		contentSearch.setLayoutId(layoutId);
-		contentSearch.setPortletId(portletId);
-		contentSearch.setArticleId(articleId);
-
-		return journalContentSearchPersistence.update(contentSearch);
 	}
 
 	private boolean _isValidGroup(long groupId) {
