@@ -80,6 +80,7 @@ public class JournalContentSearchLocalServiceImpl
 
 				dynamicQuery.add(companyIdProperty.eq(companyId));
 			});
+
 		journalContentSearchActionableDynamicQuery.setPerformActionMethod(
 			(JournalContentSearch journalContentSearch) -> {
 				if (_isValidGroup(journalContentSearch.getGroupId())) {
@@ -99,6 +100,7 @@ public class JournalContentSearchLocalServiceImpl
 
 				dynamicQuery.add(companyIdProperty.eq(companyId));
 			});
+
 		layoutActionableDynamicQuery.setPerformActionMethod(
 			(Layout layout) -> {
 				if (!_isValidGroup(layout.getGroupId())) {
