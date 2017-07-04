@@ -19,7 +19,6 @@ import com.liferay.journal.service.base.JournalContentSearchLocalServiceBaseImpl
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -75,31 +74,17 @@ public class JournalContentSearchLocalServiceImpl
 			getActionableDynamicQuery();
 
 		journalContentSearchActionableDynamicQuery.setAddCriteriaMethod(
-			new ActionableDynamicQuery.AddCriteriaMethod() {
+			dynamicQuery -> {
+				Property companyIdProperty = PropertyFactoryUtil.forName(
+					"companyId");
 
-				@Override
-				public void addCriteria(DynamicQuery dynamicQuery) {
-					Property companyIdProperty = PropertyFactoryUtil.forName(
-						"companyId");
-
-					dynamicQuery.add(companyIdProperty.eq(companyId));
-				}
-
+				dynamicQuery.add(companyIdProperty.eq(companyId));
 			});
 		journalContentSearchActionableDynamicQuery.setPerformActionMethod(
-			new ActionableDynamicQuery.
-				PerformActionMethod<JournalContentSearch>() {
-
-				@Override
-				public void performAction(
-						JournalContentSearch journalContentSearch)
-					throws PortalException {
-
-					if (_isValidGroup(journalContentSearch.getGroupId())) {
-						deleteJournalContentSearch(journalContentSearch);
-					}
+			(JournalContentSearch journalContentSearch) -> {
+				if (_isValidGroup(journalContentSearch.getGroupId())) {
+					deleteJournalContentSearch(journalContentSearch);
 				}
-
 			});
 
 		journalContentSearchActionableDynamicQuery.performActions();
@@ -108,61 +93,49 @@ public class JournalContentSearchLocalServiceImpl
 			layoutLocalService.getActionableDynamicQuery();
 
 		layoutActionableDynamicQuery.setAddCriteriaMethod(
-			new ActionableDynamicQuery.AddCriteriaMethod() {
+			dynamicQuery -> {
+				Property companyIdProperty = PropertyFactoryUtil.forName(
+					"companyId");
 
-				@Override
-				public void addCriteria(DynamicQuery dynamicQuery) {
-					Property companyIdProperty = PropertyFactoryUtil.forName(
-						"companyId");
-
-					dynamicQuery.add(companyIdProperty.eq(companyId));
-				}
-
+				dynamicQuery.add(companyIdProperty.eq(companyId));
 			});
 		layoutActionableDynamicQuery.setPerformActionMethod(
-			new ActionableDynamicQuery.PerformActionMethod<Layout>() {
-
-				@Override
-				public void performAction(Layout layout)
-					throws PortalException {
-
-					if (!_isValidGroup(layout.getGroupId())) {
-						return;
-					}
-
-					LayoutTypePortlet layoutTypePortlet =
-						(LayoutTypePortlet)layout.getLayoutType();
-
-					List<String> portletIds = layoutTypePortlet.getPortletIds();
-
-					for (String portletId : portletIds) {
-						String rootPortletId =
-							PortletConstants.getRootPortletId(portletId);
-
-						DisplayInformationProvider displayInformationProvider =
-							_serviceTrackerMap.getService(rootPortletId);
-
-						if (displayInformationProvider == null) {
-							continue;
-						}
-
-						PortletPreferences portletPreferences =
-							portletPreferencesLocalService.getPreferences(
-								layout.getCompanyId(),
-								PortletKeys.PREFS_OWNER_ID_DEFAULT,
-								PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
-								layout.getPlid(), portletId);
-
-						String classPK = displayInformationProvider.getClassPK(
-							portletPreferences);
-
-						_addContentSearch(
-							layout.getGroupId(), companyId,
-							layout.isPrivateLayout(), layout.getLayoutId(),
-							portletId, classPK);
-					}
+			(Layout layout) -> {
+				if (!_isValidGroup(layout.getGroupId())) {
+					return;
 				}
 
+				LayoutTypePortlet layoutTypePortlet =
+					(LayoutTypePortlet)layout.getLayoutType();
+
+				List<String> portletIds = layoutTypePortlet.getPortletIds();
+
+				for (String portletId : portletIds) {
+					String rootPortletId = PortletConstants.getRootPortletId(
+						portletId);
+
+					DisplayInformationProvider displayInformationProvider =
+						_serviceTrackerMap.getService(rootPortletId);
+
+					if (displayInformationProvider == null) {
+						continue;
+					}
+
+					PortletPreferences portletPreferences =
+						portletPreferencesLocalService.getPreferences(
+							layout.getCompanyId(),
+							PortletKeys.PREFS_OWNER_ID_DEFAULT,
+							PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
+							layout.getPlid(), portletId);
+
+					String classPK = displayInformationProvider.getClassPK(
+						portletPreferences);
+
+					_addContentSearch(
+						layout.getGroupId(), companyId,
+						layout.isPrivateLayout(), layout.getLayoutId(),
+						portletId, classPK);
+				}
 			});
 
 		layoutActionableDynamicQuery.performActions();
