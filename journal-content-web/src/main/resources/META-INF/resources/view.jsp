@@ -133,6 +133,31 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 							<liferay-ui:asset-addon-entry-display assetAddonEntries="<%= journalContentDisplayContext.getSelectedUserToolAssetAddonEntries() %>" />
 						</div>
 
+						<div>
+							<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+								<c:if test="<%= journalContentDisplayContext.isShowEditArticleIcon() %>">
+
+									<%
+									JournalArticle latestArticle = journalContentDisplayContext.getLatestArticle();
+
+									Map<String, Object> data = new HashMap<String, Object>();
+
+									data.put("destroyOnHide", true);
+									data.put("id", HtmlUtil.escape(portletDisplay.getNamespace()) + "editAsset");
+									data.put("title", HtmlUtil.escape(latestArticle.getTitle(locale)));
+									%>
+
+									<liferay-ui:icon
+										data="<%= data %>"
+										id="editWebContentIcon"
+										message="edit-web-content"
+										url="<%= journalContentDisplayContext.getURLEdit() %>"
+										useDialog="<%= true %>"
+									/>
+								</c:if>
+							</liferay-ui:icon-menu>
+						</div>
+
 						<div class="journal-content-article">
 							<%= articleDisplay.getContent() %>
 						</div>
