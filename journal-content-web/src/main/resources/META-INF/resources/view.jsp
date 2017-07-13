@@ -155,6 +155,23 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 										useDialog="<%= true %>"
 									/>
 								</c:if>
+
+								<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.PERMISSIONS) %>">
+									<liferay-security:permissionsURL
+										modelResource="<%= JournalArticle.class.getName() %>"
+										modelResourceDescription="<%= HtmlUtil.escape(article.getTitle(locale)) %>"
+										resourcePrimKey="<%= String.valueOf(article.getResourcePrimKey()) %>"
+										var="permissionsURL"
+										windowState="<%= LiferayWindowState.POP_UP.toString() %>"
+									/>
+
+									<liferay-ui:icon
+										message="permissions"
+										method="get"
+										url="<%= permissionsURL %>"
+										useDialog="<%= true %>"
+									/>
+								</c:if>
 							</liferay-ui:icon-menu>
 						</div>
 
