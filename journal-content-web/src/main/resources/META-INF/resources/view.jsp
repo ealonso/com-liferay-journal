@@ -133,7 +133,7 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 							<liferay-ui:asset-addon-entry-display assetAddonEntries="<%= journalContentDisplayContext.getSelectedUserToolAssetAddonEntries() %>" />
 						</div>
 
-						<div>
+						<div class="pull-right visible-interaction">
 							<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
 								<c:if test="<%= journalContentDisplayContext.isShowEditArticleIcon() %>">
 
