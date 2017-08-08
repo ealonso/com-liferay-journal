@@ -179,7 +179,7 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 						<liferay-ui:search-container-column-text
 							cssClass="table-cell-content"
 							name="description"
-							value="<%= StringUtil.shorten(HtmlUtil.stripHtml(curArticle.getDescription(locale)), 200) %>"
+							value="<%= JournalStringUtil.shortenWithHtml(curArticle.getDescription(locale), abstractLength) %>"
 						/>
 
 						<liferay-ui:search-container-column-text
