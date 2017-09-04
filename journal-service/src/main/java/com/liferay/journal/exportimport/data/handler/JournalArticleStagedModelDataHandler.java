@@ -265,6 +265,16 @@ public class JournalArticleStagedModelDataHandler
 		articleElement.addAttribute(
 			"article-resource-uuid", article.getArticleResourceUuid());
 
+		JournalArticle latestArticle =
+			_journalArticleLocalService.fetchLatestArticle(
+				article.getResourcePrimKey());
+
+		if ((latestArticle != null) &&
+			(latestArticle.getId() == article.getId())) {
+
+			articleElement.addAttribute("latest", String.valueOf(true));
+		}
+
 		if (article.getFolderId() !=
 				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
@@ -348,10 +358,6 @@ public class JournalArticleStagedModelDataHandler
 				}
 			}
 		}
-
-		JournalArticle latestArticle =
-			_journalArticleLocalService.fetchLatestArticle(
-				article.getResourcePrimKey());
 
 		if ((latestArticle != null) &&
 			(latestArticle.getId() == article.getId())) {
@@ -731,6 +737,13 @@ public class JournalArticleStagedModelDataHandler
 
 			String articleResourceUuid = articleElement.attributeValue(
 				"article-resource-uuid");
+
+			boolean latest = GetterUtil.getBoolean(
+				articleElement.attributeValue("latest"));
+
+			if (latest) {
+				serviceContext.setAttribute("latest", Boolean.TRUE);
+			}
 
 			// Used when importing LARs with journal schemas under 1.1.0
 
