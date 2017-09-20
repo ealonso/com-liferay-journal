@@ -741,10 +741,6 @@ public class JournalArticleStagedModelDataHandler
 			boolean latest = GetterUtil.getBoolean(
 				articleElement.attributeValue("latest"));
 
-			if (latest) {
-				serviceContext.setAttribute("latest", Boolean.TRUE);
-			}
-
 			// Used when importing LARs with journal schemas under 1.1.0
 
 			_setLegacyValues(article);
@@ -793,7 +789,7 @@ public class JournalArticleStagedModelDataHandler
 						reviewDateHour, reviewDateMinute, neverReview,
 						article.isIndexable(), article.isSmallImage(),
 						article.getSmallImageURL(), smallFile, null, articleURL,
-						serviceContext);
+						latest, serviceContext);
 				}
 				else {
 					importedArticle = _journalArticleLocalService.updateArticle(
@@ -810,7 +806,7 @@ public class JournalArticleStagedModelDataHandler
 						reviewDateHour, reviewDateMinute, neverReview,
 						article.isIndexable(), article.isSmallImage(),
 						article.getSmallImageURL(), smallFile, null, articleURL,
-						serviceContext);
+						latest, serviceContext);
 
 					String articleUuid = article.getUuid();
 					String importedArticleUuid = importedArticle.getUuid();
