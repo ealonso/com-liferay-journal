@@ -48,7 +48,11 @@ public interface JournalWebConfiguration {
 	 * @deprecated As of 2.0.0, with no direct replacement
 	 */
 	@Deprecated
-	@Meta.AD(deflt = "true", required = false)
+	@Meta.AD(
+		deflt = "true",
+		description = "journal-article-search-with-index-description",
+		required = false
+	)
 	public boolean journalArticlesSearchWithIndex();
 
 	@Meta.AD(deflt = "true", required = false)
