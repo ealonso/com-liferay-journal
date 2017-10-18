@@ -44,6 +44,10 @@ public interface JournalWebConfiguration {
 	@Meta.AD(deflt = "true", required = false)
 	public boolean journalArticleForceAutogenerateId();
 
+	/**
+	 * @deprecated As of 2.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Meta.AD(deflt = "true", required = false)
 	public boolean journalArticlesSearchWithIndex();
 
