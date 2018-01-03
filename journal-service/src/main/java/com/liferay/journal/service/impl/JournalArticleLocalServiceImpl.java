@@ -8510,6 +8510,20 @@ public class JournalArticleLocalServiceImpl
 			throw new ArticleTitleException("Title is null");
 		}
 
+		int titleMaxLength = ModelHintsUtil.getMaxLength(
+			JournalArticleLocalization.class.getName(), "title");
+
+		for (Locale locale : titleMap.keySet()) {
+			String title = titleMap.get(locale);
+
+			if (Validator.isNull(title) || (title.length() <= titleMaxLength)) {
+				continue;
+			}
+
+			throw new ArticleTitleException.MustNotExceedMaximumLength(
+				title, titleMaxLength);
+		}
+
 		validateContent(content);
 
 		DDMStructure ddmStructure = ddmStructureLocalService.getStructure(
@@ -8845,9 +8859,6 @@ public class JournalArticleLocalServiceImpl
 			localeSet.addAll(descriptionMap.keySet());
 		}
 
-		int titleMaxLength = ModelHintsUtil.getMaxLength(
-			JournalArticleLocalization.class.getName(), "title");
-
 		List<JournalArticleLocalization> journalArticleLocalizations =
 			new ArrayList<>();
 
@@ -8861,13 +8872,6 @@ public class JournalArticleLocalServiceImpl
 
 			if (Validator.isNull(title) && Validator.isNull(description)) {
 				continue;
-			}
-
-			if (Validator.isNotNull(title) &&
-				(title.length() > titleMaxLength)) {
-
-				throw new ArticleTitleException.MustNotExceedMaximumLength(
-					title, titleMaxLength);
 			}
 
 			JournalArticleLocalization journalArticleLocalization =
